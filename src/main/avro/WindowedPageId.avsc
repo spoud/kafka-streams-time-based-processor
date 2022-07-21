@@ -1,0 +1,21 @@
+{
+  "type": "record",
+  "name": "WindowedPageId",
+  "namespace": "com.example",
+  "fields": [
+    {
+      "name": "id",
+      "type": "long"
+    },
+    {
+      "name": "windowStart",
+      "type": "long",
+      "doc": "start of the time window in millis"
+    },
+    {
+      "name": "windowEnd",
+      "type": "long",
+      "doc": "end of the time window in millis"
+    }
+  ]
+}

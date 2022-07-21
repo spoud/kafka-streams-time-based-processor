@@ -1,0 +1,27 @@
+management:
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*" # don't ever do this in production environments
+spring:
+  kafka:
+    producer:
+      value-serializer: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerializer
+      key-serializer: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerializer
+      properties:
+        schema.registry.url: http://localhost:8081
+    streams:
+      properties:
+        default.value.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+        default.key.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+        default.windowed.value.serde.inner: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+        default.windowed.key.serde.inner: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+        schema.registry.url: http://localhost:8081
+        commit.interval.ms: 100
+      application-id: session-window-demo3
+    properties:
+      schema.registry.url: http://localhost:8081

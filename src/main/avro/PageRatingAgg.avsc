@@ -1,0 +1,32 @@
+{
+  "type": "record",
+  "name": "PageRatingAgg",
+  "namespace": "com.example",
+  "fields": [
+    {
+      "name": "min",
+      "type": "int",
+      "default": 5
+    },
+    {
+      "name": "max",
+      "type": "int",
+      "default": 0
+    },
+    {
+      "name": "sum",
+      "type": "long",
+      "default": 0
+    },
+    {
+      "name": "count",
+      "type": "long",
+      "default": 0
+    },
+    {
+      "name": "avg",
+      "type": "double",
+      "default": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "type": "record",
+  "name": "PageRating",
+  "namespace": "com.example",
+  "fields": [
+    {
+      "name": "rating",
+      "type": "int"
+    }
+  ]
+}
