@@ -1,24 +1,25 @@
 package com.example.transformer
 
 import org.apache.kafka.common.serialization.Serde
-import org.apache.kafka.streams.KeyValue
-import org.apache.kafka.streams.kstream.Transformer
-import org.apache.kafka.streams.kstream.TransformerSupplier
 import org.apache.kafka.streams.kstream.Windowed
+import org.apache.kafka.streams.processor.api.Processor
+import org.apache.kafka.streams.processor.api.ProcessorSupplier
 import org.apache.kafka.streams.state.StoreBuilder
 import org.apache.kafka.streams.state.Stores
 import java.time.Duration
 
-class DelayEmissionTransformerSupplier<K, V, S>(
+class DelayEmissionProcessorSupplier<K, V, S>(
     private val storeName: String,
     private val timeout: Duration,
     private val punctuationInterval: Duration,
     private val keySerde: Serde<S>,
     private val valSerde: Serde<V>,
     private val keyConverter: (Windowed<K>) -> S
-) : TransformerSupplier<Windowed<K>, V?, KeyValue<S, V>?> {
-    override fun get(): Transformer<Windowed<K>, V?, KeyValue<S, V>?> {
-        return DelayEmissionTransformer(
+) : ProcessorSupplier<Windowed<K>, V?, S, V?> {
+
+
+    override fun get(): Processor<Windowed<K>, V?, S, V?> {
+        return DelayEmissionProcessor(
             storeName = storeName,
             suppressTimeout = timeout,
             punctuationInterval = punctuationInterval,

@@ -1,6 +1,6 @@
 package com.example.windowing
 
-import com.example.transformer.DelayEmissionTransformerSupplier
+import com.example.transformer.DelayEmissionProcessorSupplier
 import org.apache.kafka.common.metrics.Sensor.RecordingLevel
 import org.apache.kafka.common.serialization.IntegerSerializer
 import org.apache.kafka.common.serialization.Serde
@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.util.*
 
-internal class DelayEmissionTransformerTest {
+internal class DelayEmissionProcessorTest {
     private val topic = "stream"
     private val stateStoreName: String = "myTransformState"
     private val results: MutableList<KeyValue<Int, Long>> = mutableListOf()
@@ -35,8 +35,8 @@ internal class DelayEmissionTransformerTest {
                 .windowedBy(SessionWindows.ofInactivityGapWithNoGrace(Duration.ofSeconds(10)))
                 .count()
                 .toStream()
-                .transform(
-                    DelayEmissionTransformerSupplier<Int, Long, Int>(
+                .process(
+                    DelayEmissionProcessorSupplier<Int, Long, Int>(
                         keySerde = Serdes.Integer(),
                         valSerde = Serdes.Long(),
                         storeName = stateStoreName,
