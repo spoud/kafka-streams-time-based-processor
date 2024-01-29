@@ -4,7 +4,7 @@ import com.example.PageId
 import com.example.PageRating
 import com.example.PageRatingAgg
 import com.example.WindowedPageId
-import com.example.transformer.DelayEmissionTransformerSupplier
+import com.example.transformer.DelayEmissionProcessorSupplier
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
 import org.apache.avro.specific.SpecificRecord
@@ -27,8 +27,8 @@ class KafkaStreamsTopology() {
     private val valSerde: SpecificAvroSerde<PageRatingAgg> = createSerde(false)
 
     private val ratingAggregator = Aggregator<PageId, PageRating, PageRatingAgg> { pageId, rating, aggregate ->
-        aggregate.count = aggregate.count + 1
-        aggregate.sum = aggregate.sum + rating.rating
+        aggregate.count += 1
+        aggregate.sum += rating.rating
         aggregate.avg = aggregate.sum / aggregate.count.toDouble()
         aggregate.max = max(aggregate.max, rating.rating)
         aggregate.min = min(aggregate.min, rating.rating)
@@ -41,6 +41,7 @@ class KafkaStreamsTopology() {
     ): Topology {
         val contractStream = kStreamBuilder.stream<PageId, PageRating>("ratings")
         val timeWindow = TimeWindows.ofSizeAndGrace(Duration.ofSeconds(30), Duration.ofSeconds(1))
+        val storeName = "suppressionStore"
         val resultStream = contractStream.groupByKey()
             .windowedBy(timeWindow)
             .aggregate(
@@ -48,9 +49,9 @@ class KafkaStreamsTopology() {
                 ratingAggregator
             )
             .toStream()
-            .transform(
-                DelayEmissionTransformerSupplier(
-                    storeName = "suppressionStore",
+            .process(
+                DelayEmissionProcessorSupplier(
+                    storeName = storeName,
                     keySerde = windowedKeySerde,
                     valSerde = valSerde,
                     keyConverter = ::toWindowedKey,

@@ -3,7 +3,7 @@ version: '3'
 services:
   zookeeper:
     restart: on-failure
-    image: confluentinc/cp-zookeeper:7.2.0
+    image: confluentinc/cp-zookeeper:7.5.1
     hostname: zookeeper
     ports:
       - "2181:2181"
@@ -13,7 +13,7 @@ services:
 
   broker:
     restart: on-failure
-    image: confluentinc/cp-server:7.2.0
+    image: confluentinc/cp-server:7.5.1
     hostname: broker
     depends_on:
       - zookeeper
@@ -43,7 +43,7 @@ services:
 
   schema-registry:
     restart: on-failure
-    image: confluentinc/cp-schema-registry:7.0.2
+    image: confluentinc/cp-schema-registry:7.5.1
     depends_on:
       - broker
     ports:
@@ -53,7 +53,7 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker:29092'
 
   setup_topics:
-    image: confluentinc/cp-server:7.2.0
+    image: confluentinc/cp-server:7.5.1
     depends_on:
       - broker
       - schema-registry
