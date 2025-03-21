@@ -16,7 +16,7 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <confluent.platform.version>7.5.1</confluent.platform.version>
+        <confluent.platform.version>7.9.0</confluent.platform.version>
     </properties>
 
     <dependencies>
